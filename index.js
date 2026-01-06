@@ -26,7 +26,31 @@ function createSettlementServer() {
     {
       title: '정산 데이터 추가',
       description: '정산 데이터를 데이터베이스에 추가합니다.',
-      inputSchema: addSettlementInputSchema,
+      inputSchema: {
+        type: 'object',
+        properties: {
+          deposit_scheduled_amount: { type: 'number' },
+          store_id: { type: 'string' },
+          settlement_date: { type: 'string', format: 'date' },
+          settlement_deposit_date: { type: 'string', format: 'date' },
+          settlement_limit: { type: 'number' },
+          remaining_settlement_limit: { type: 'number' },
+          daily_settlement_amount: { type: 'number' },
+          unpaid_settlement_amount: { type: 'number' },
+          scheduled_deposit_amount: { type: 'number' },
+        },
+        required: [
+          'deposit_scheduled_amount',
+          'store_id',
+          'settlement_date',
+          'settlement_deposit_date',
+          'settlement_limit',
+          'remaining_settlement_limit',
+          'daily_settlement_amount',
+          'unpaid_settlement_amount',
+          'scheduled_deposit_amount'
+        ]
+      },
     },
     async (args) => {
       try {
