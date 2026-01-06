@@ -10,11 +10,6 @@ class SettlementServer {
       {
         name: 'settlement-server',
         version: '1.0.0',
-      },
-      {
-        capabilities: {
-          tools: {},
-        },
       }
     );
 
