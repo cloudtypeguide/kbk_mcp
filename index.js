@@ -1,8 +1,10 @@
-const { Server } = require('@modelcontextprotocol/sdk/server');
-const { SSEServerTransport } = require('@modelcontextprotocol/sdk/server/http');
-const express = require('express');
-const cors = require('cors');
-const axios = require('axios');
+import { Server } from './node_modules/@modelcontextprotocol/sdk/dist/esm/server/index.js';
+import { StdioServerTransport } from './node_modules/@modelcontextprotocol/sdk/dist/esm/server/stdio.js';
+import {
+  CallToolRequestSchema,
+  ListToolsRequestSchema,
+} from './node_modules/@modelcontextprotocol/sdk/dist/esm/types.js';
+import axios from 'axios';
 
 class SettlementServer {
   constructor() {
@@ -10,6 +12,11 @@ class SettlementServer {
       {
         name: 'settlement-server',
         version: '1.0.0',
+      },
+      {
+        capabilities: {
+          tools: {},
+        },
       }
     );
 
@@ -18,7 +25,7 @@ class SettlementServer {
 
   setupToolHandlers() {
     // List available tools
-    this.server.setRequestHandler('tools/list', async () => {
+    this.server.setRequestHandler(ListToolsRequestSchema, async () => {
       return {
         tools: [
           {
@@ -93,7 +100,7 @@ class SettlementServer {
     });
 
     // Handle tool calls
-    this.server.setRequestHandler('tools/call', async (request) => {
+    this.server.setRequestHandler(CallToolRequestSchema, async (request) => {
       const { name, arguments: args } = request.params;
 
       try {
@@ -135,16 +142,9 @@ class SettlementServer {
   }
 
   async run() {
-    const app = express();
-    app.use(cors());
-    app.use(express.json());
-
-    const transport = new SSEServerTransport('/mcp', app);
+    const transport = new StdioServerTransport();
     await this.server.connect(transport);
-
-    app.listen(3000, () => {
-      console.log('Settlement MCP Server running on HTTP port 3000 with /mcp endpoint');
-    });
+    console.error('Settlement MCP server running on stdio');
   }
 }
 
