@@ -71,7 +71,11 @@ function createSettlementServer() {
     {
       title: '정산 데이터 조회',
       description: '모든 정산 데이터를 조회합니다.',
-      inputSchema: z.object({}),
+      inputSchema: {
+        type: 'object',
+        properties: {},
+        additionalProperties: false
+      },
     },
     async (args) => {
       try {
