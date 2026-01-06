@@ -1,9 +1,11 @@
 import { Server } from './node_modules/@modelcontextprotocol/sdk/dist/esm/server/index.js';
-import { StdioServerTransport } from './node_modules/@modelcontextprotocol/sdk/dist/esm/server/stdio.js';
+import { StreamableHTTPServerTransport } from './node_modules/@modelcontextprotocol/sdk/dist/esm/server/streamableHttp.js';
 import {
   CallToolRequestSchema,
   ListToolsRequestSchema,
 } from './node_modules/@modelcontextprotocol/sdk/dist/esm/types.js';
+import express from 'express';
+import cors from 'cors';
 import axios from 'axios';
 
 class SettlementServer {
@@ -142,9 +144,23 @@ class SettlementServer {
   }
 
   async run() {
-    const transport = new StdioServerTransport();
+    const app = express();
+    app.use(cors());
+    app.use(express.json());
+
+    const transport = new StreamableHTTPServerTransport({
+      sessionIdGenerator: undefined, // stateless mode
+    });
+
+    app.all('/mcp', async (req, res) => {
+      await transport.handleRequest(req, res);
+    });
+
     await this.server.connect(transport);
-    console.error('Settlement MCP server running on stdio');
+
+    app.listen(3000, () => {
+      console.log('Settlement MCP Server running on HTTP port 3000 with /mcp endpoint');
+    });
   }
 }
 
