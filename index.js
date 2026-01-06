@@ -1,5 +1,5 @@
 const { Server } = require('@modelcontextprotocol/sdk/server');
-const { SSEServerTransport } = require('@modelcontextprotocol/sdk/server/sse');
+const { SSEServerTransport } = require('@modelcontextprotocol/sdk/server/http');
 const express = require('express');
 const cors = require('cors');
 const axios = require('axios');
