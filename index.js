@@ -6,31 +6,17 @@ import axios from "axios";
 
 const API_BASE_URL = "https://port-0-kbk-back-mk244bs3a55fe891.sel3.cloudtype.app";
 
-const addSettlementInputSchema = {
-  type: 'object',
-  properties: {
-    deposit_scheduled_amount: { type: 'number' },
-    store_id: { type: 'string' },
-    settlement_date: { type: 'string', format: 'date' },
-    settlement_deposit_date: { type: 'string', format: 'date' },
-    settlement_limit: { type: 'number' },
-    remaining_settlement_limit: { type: 'number' },
-    daily_settlement_amount: { type: 'number' },
-    unpaid_settlement_amount: { type: 'number' },
-    scheduled_deposit_amount: { type: 'number' },
-  },
-  required: [
-    'deposit_scheduled_amount',
-    'store_id',
-    'settlement_date',
-    'settlement_deposit_date',
-    'settlement_limit',
-    'remaining_settlement_limit',
-    'daily_settlement_amount',
-    'unpaid_settlement_amount',
-    'scheduled_deposit_amount'
-  ]
-};
+const addSettlementInputSchema = z.object({
+  deposit_scheduled_amount: z.number(),
+  store_id: z.string(),
+  settlement_date: z.string(),
+  settlement_deposit_date: z.string(),
+  settlement_limit: z.number(),
+  remaining_settlement_limit: z.number(),
+  daily_settlement_amount: z.number(),
+  unpaid_settlement_amount: z.number(),
+  scheduled_deposit_amount: z.number(),
+});
 
 function createSettlementServer() {
   const server = new McpServer({ name: "settlement-mcp", version: "1.0.0" });
