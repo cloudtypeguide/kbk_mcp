@@ -1,5 +1,7 @@
 const { Server } = require('@modelcontextprotocol/sdk/server/index.js');
-const { StdioServerTransport } = require('@modelcontextprotocol/sdk/server/stdio.js');
+const { SSEServerTransport } = require('@modelcontextprotocol/sdk/server/sse.js');
+const express = require('express');
+const cors = require('cors');
 const axios = require('axios');
 
 class SettlementServer {
@@ -138,9 +140,16 @@ class SettlementServer {
   }
 
   async run() {
-    const transport = new StdioServerTransport();
+    const app = express();
+    app.use(cors());
+    app.use(express.json());
+
+    const transport = new SSEServerTransport('/mcp', app);
     await this.server.connect(transport);
-    console.error('Settlement MCP Server running on stdio');
+
+    app.listen(3000, () => {
+      console.log('Settlement MCP Server running on HTTP port 3000 with /mcp endpoint');
+    });
   }
 }
 
